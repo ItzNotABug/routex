@@ -16,7 +16,7 @@ navigation between old and new URLs.
 ## 📦 Installation
 
 ```bash
-pnpm routex
+pnpm add -D @itznotabug/routex
 ```
 
 ## 🚀 Quick Start
