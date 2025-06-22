@@ -49,13 +49,20 @@ export class RedirectGenerator {
         const template = await templateManager.resolveTemplate();
         const metaTags = this.createMetaTags(destination, delay);
 
-        return templateManager.processTemplate(
+        const processedTemplate = templateManager.processTemplate(
             template,
             source,
             destination,
             metaTags,
             delay,
         );
+
+        if (delay === 0) {
+            // faster redirect if delay is 0.
+            return this.injectClientScript(processedTemplate);
+        }
+
+        return processedTemplate;
     }
 
     async generateAllRedirectFiles(outDir: string): Promise<void> {

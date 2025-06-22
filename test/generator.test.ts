@@ -132,5 +132,31 @@ describe('RedirectGenerator', () => {
             );
             expect(content).toContain('<link rel="canonical" href="/new">');
         });
+
+        it('should inject client script for immediate redirect when delay is 0', async () => {
+            const options: Required<RedirectOptions> = {
+                ...defaultOptions,
+                redirectDelay: 0,
+            };
+
+            const generator = new RedirectGenerator(
+                { '/instant': '/target' },
+                options,
+                mockVitePressConfig,
+            );
+
+            await generator.generateAllRedirectFiles('/test/dist');
+
+            const files = vol.toJSON();
+            const content = files['/test/dist/instant/index.html'] as string;
+
+            // Should have meta refresh AND client script for immediate redirect
+            expect(content).toContain(
+                '<meta http-equiv="refresh" content="0; url=/target">',
+            );
+            expect(content).toContain('function performRedirect()');
+            expect(content).toContain('location.replace');
+            expect(content).toContain('location.replace(destination)');
+        });
     });
 });
