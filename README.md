@@ -162,4 +162,4 @@ Contributions are welcome! Please:
 
 ---
 
-[⭐ Star this repo](https://github.com/itznotabug/routex) if you find it useful!
+⭐ Star this repo if you find it useful!
