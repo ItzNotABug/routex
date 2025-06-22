@@ -1,0 +1,61 @@
+{
+    "name": "@itznotabug/routex",
+    "version": "0.0.1",
+    "type": "module",
+    "description": "A client side redirection plugin for Vitepress.",
+    "author": "@itznotabug",
+    "main": "dist/routex.js",
+    "files": [
+        "dist/"
+    ],
+    "types": "./dist/routex.d.ts",
+    "module": "./dist/routex.js",
+    "exports": {
+        ".": {
+            "import": "./dist/routex.js",
+            "types": "./dist/routex.d.ts"
+        }
+    },
+    "scripts": {
+        "lint": "prettier . --check",
+        "format": "prettier . --write",
+        "build": "tsc",
+        "build:types": "tsc --declaration --emitDeclarationOnly --outDir types",
+        "test": "vitest",
+        "test:run": "vitest run"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "singleQuote": true
+    },
+    "homepage": "https://github.com/itznotabug/routex",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/itznotabug/routex.git"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.3",
+        "memfs": "^4.9.2",
+        "prettier": "^3.5.3",
+        "typescript": "^5.8.3",
+        "vite": "^6.3.5",
+        "vitepress": "^1.6.3",
+        "vitest": "^1.6.0"
+    },
+    "keywords": [
+        "vitepress",
+        "vitepress-plugin",
+        "redirect",
+        "redirects",
+        "client-side-redirect",
+        "vite-plugin",
+        "typescript",
+        "seo",
+        "static-site",
+        "url-redirect",
+        "navigation",
+        "documentation"
+    ],
+    "license": "Apache-2.0",
+    "packageManager": "pnpm@10.12.1"
+}

@@ -1,0 +1,9 @@
+dist
+.idea
+**/node_modules/
+
+.env
+*.env
+
+*.sh
+*.iml

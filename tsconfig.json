@@ -1,0 +1,57 @@
+{
+	"compilerOptions": {
+		// Target and module settings
+		"target": "ES2022",
+		"module": "ESNext",
+		"lib": ["ES2022", "DOM"],
+		"moduleDetection": "force",
+		"moduleResolution": "bundler",
+
+		// Output settings
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"declaration": true,
+		"declarationMap": false,
+		"removeComments": false,
+
+		// Strict type checking - best practices
+		"strict": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"exactOptionalPropertyTypes": true,
+		"noImplicitOverride": true,
+		"useUnknownInCatchVariables": true,
+
+		// Code quality flags
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noPropertyAccessFromIndexSignature": false,
+		"forceConsistentCasingInFileNames": true,
+
+		// Module interop
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"allowJs": true,
+
+		// Performance and compatibility
+		"skipLibCheck": true,
+		"preserveConstEnums": true,
+
+		// Node.js types
+		"types": ["node"]
+	},
+
+	"include": [
+		"src/**/*.ts",
+	],
+
+	"exclude": [
+		"dist",
+		"node_modules",
+	]
+}
