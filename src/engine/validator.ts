@@ -92,6 +92,7 @@ export class RedirectValidator {
         if (delay > 5) {
             Logger.warn(
                 `redirectDelay of ${delay}s may negatively impact user experience.`,
+                true,
             );
         }
     }

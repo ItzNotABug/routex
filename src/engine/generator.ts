@@ -64,6 +64,7 @@ export class RedirectGenerator {
 
         Logger.log(
             `Generating ${redirectCount} redirect page${redirectCount > 1 ? 's' : ''}...`,
+            true,
         );
 
         const templateManager = new Template(
@@ -91,7 +92,7 @@ export class RedirectGenerator {
         );
 
         Logger.log(
-            `✓Generated ${redirectCount} redirect page${redirectCount > 1 ? 's' : ''}`,
+            `✓ Generated ${redirectCount} redirect page${redirectCount > 1 ? 's' : ''}`,
         );
     }
 
