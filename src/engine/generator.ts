@@ -43,7 +43,7 @@ export class RedirectGenerator {
     injectProductionClientScript(html: string, destination: string) {
         // quick, small and efficient
         const scriptContent = `var d=${JSON.stringify(destination)};try{location.replace(d)}catch(e){location.href=d}`;
-        const script = `<script>\n        ${scriptContent.split('\n').join('\n        ')}\n    </script>`;
+        const script = `<script>${scriptContent}</script>`;
         return html.replace('<head>', `<head>\n    ${script}`);
     }
 
