@@ -56,7 +56,7 @@ export function routex(config: RedirectConfig): Plugin {
                 options,
                 vitePressConfig,
             );
-            return generator.injectClientScript(html);
+            return generator.injectDevelopmentClientScript(html);
         },
 
         async configResolved(resolvedConfig: ResolvedConfig) {
