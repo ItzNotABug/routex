@@ -5,7 +5,7 @@ import {
     RedirectGenerator,
     RedirectValidator,
     type VitePressConfig,
-} from './engine';
+} from './engine/index.js';
 
 /**
  * VitePress plugin for handling client-side static redirects
@@ -94,4 +94,4 @@ export type {
     RedirectMap,
     RedirectOptions,
     VitePressConfig,
-} from './engine';
+} from './engine/index.js';
