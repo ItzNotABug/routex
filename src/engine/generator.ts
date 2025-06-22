@@ -15,7 +15,7 @@ export class RedirectGenerator {
         private vitepressConfig?: VitePressConfig,
     ) {}
 
-    injectClientScript(html: string): string {
+    injectDevelopmentClientScript(html: string): string {
         const redirectsJson = JSON.stringify(this.rules, null, 2);
 
         const scriptContent = `
@@ -40,6 +40,13 @@ export class RedirectGenerator {
         return html.replace('<head>', `<head>\n    ${script}`);
     }
 
+    injectProductionClientScript(html: string, destination: string) {
+        // quick, small and efficient
+        const scriptContent = `var d=${JSON.stringify(destination)};try{location.replace(d)}catch(e){location.href=d}`;
+        const script = `<script>${scriptContent}</script>`;
+        return html.replace('<head>', `<head>\n    ${script}`);
+    }
+
     async generateRedirectPage(
         source: string,
         destination: string,
@@ -49,13 +56,23 @@ export class RedirectGenerator {
         const template = await templateManager.resolveTemplate();
         const metaTags = this.createMetaTags(destination, delay);
 
-        return templateManager.processTemplate(
+        const processedTemplate = templateManager.processTemplate(
             template,
             source,
             destination,
             metaTags,
             delay,
         );
+
+        if (delay === 0) {
+            // faster redirect if delay is 0.
+            return this.injectProductionClientScript(
+                processedTemplate,
+                destination,
+            );
+        }
+
+        return processedTemplate;
     }
 
     async generateAllRedirectFiles(outDir: string): Promise<void> {

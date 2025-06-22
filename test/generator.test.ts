@@ -45,7 +45,7 @@ describe('RedirectGenerator', () => {
 
             const html =
                 '<html><head><title>Test</title></head><body></body></html>';
-            const result = generator.injectClientScript(html);
+            const result = generator.injectDevelopmentClientScript(html);
 
             expect(result).toContain('<script>');
             expect(result).toContain('function performRedirect()');
@@ -62,7 +62,7 @@ describe('RedirectGenerator', () => {
             );
 
             const html = '<html><head></head><body></body></html>';
-            const result = generator.injectClientScript(html);
+            const result = generator.injectDevelopmentClientScript(html);
 
             expect(result).toContain('const redirects = {}');
         });
@@ -131,6 +131,34 @@ describe('RedirectGenerator', () => {
                 '<meta name="robots" content="noindex, nofollow">',
             );
             expect(content).toContain('<link rel="canonical" href="/new">');
+        });
+
+        it('should inject client script for immediate redirect when delay is 0', async () => {
+            const options: Required<RedirectOptions> = {
+                ...defaultOptions,
+                redirectDelay: 0,
+            };
+
+            const generator = new RedirectGenerator(
+                { '/instant': '/target' },
+                options,
+                mockVitePressConfig,
+            );
+
+            await generator.generateAllRedirectFiles('/test/dist');
+
+            const files = vol.toJSON();
+            const content = files['/test/dist/instant/index.html'] as string;
+
+            // Should have meta refresh AND client script for immediate redirect
+            expect(content).toContain(
+                '<meta http-equiv="refresh" content="0; url=/target">',
+            );
+
+            // destination variable definition
+            expect(content).toContain(`var d=${JSON.stringify('/target')}`);
+            expect(content).toContain('location.replace(d)'); // try block
+            expect(content).toContain('location.href=d'); // catch block
         });
     });
 });
