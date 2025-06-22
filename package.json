@@ -28,10 +28,10 @@
         "tabWidth": 4,
         "singleQuote": true
     },
-    "homepage": "https://github.com/itznotabug/routex",
+    "homepage": "https://github.com/ItzNotABug/routex",
     "repository": {
         "type": "git",
-        "url": "https://github.com/itznotabug/routex.git"
+        "url": "https://github.com/ItzNotABug/routex.git"
     },
     "devDependencies": {
         "@types/node": "^24.0.3",
