@@ -179,9 +179,7 @@ export class RedirectValidator {
         const results = await Promise.all(
             destinationChecks.map(async (item) => ({
                 dest: item.dest,
-                exists: (await Promise.all(item.checks)).some(
-                    (result) => result,
-                ),
+                exists: (await Promise.all(item.checks)).some(Boolean),
             })),
         );
 
