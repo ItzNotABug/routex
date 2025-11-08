@@ -3,7 +3,6 @@ import { routex } from '../src/routex';
 import type { RedirectConfig } from '../src/engine';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-
 describe('routex', () => {
     beforeEach(() => {
         vol.reset();
