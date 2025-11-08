@@ -3,7 +3,6 @@ import { routex } from '../src/routex';
 import type { RedirectConfig } from '../src/engine';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-declare function setupFileSystem(files: Record<string, string>): void;
 
 describe('routex', () => {
     beforeEach(() => {
