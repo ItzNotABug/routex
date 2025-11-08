@@ -75,7 +75,7 @@ describe('routex', () => {
 
                 expect(result).toContain('<script>');
                 expect(result).toContain('function performRedirect()');
-                expect(result).toContain('"/old": "/new"');
+                expect(result).toContain('"/old":"/new"');
                 expect(result).toContain('location.replace(destination)');
             }
         });
@@ -237,8 +237,8 @@ describe('routex', () => {
             }
 
             expect(transformedHtml).toContain('<script>');
-            expect(transformedHtml).toContain('"/old-page": "/new-page"');
-            expect(transformedHtml).toContain('"/api/v1": "/api/v2"');
+            expect(transformedHtml).toContain('"/old-page":"/new-page"');
+            expect(transformedHtml).toContain('"/api/v1":"/api/v2"');
 
             // Resolve config and generate bundle
             const mockConfig = {

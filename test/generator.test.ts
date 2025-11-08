@@ -49,8 +49,8 @@ describe('RedirectGenerator', () => {
 
             expect(result).toContain('<script>');
             expect(result).toContain('function performRedirect()');
-            expect(result).toContain('"/old-page": "/new-page"');
-            expect(result).toContain('"/legacy": "/modern"');
+            expect(result).toContain('"/old-page":"/new-page"');
+            expect(result).toContain('"/legacy":"/modern"');
             expect(result).toContain('location.replace(destination)');
         });
 
