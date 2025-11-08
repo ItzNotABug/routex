@@ -16,7 +16,7 @@ export class RedirectGenerator {
     ) {}
 
     injectDevelopmentClientScript(html: string): string {
-        const redirectsJson = JSON.stringify(this.rules, null, 2);
+        const redirectsJson = JSON.stringify(this.rules);
 
         const scriptContent = `
             function performRedirect() {
@@ -36,7 +36,7 @@ export class RedirectGenerator {
             performRedirect();
         `.trim();
 
-        const script = `<script>\n        ${scriptContent.split('\n').join('\n        ')}\n    </script>`;
+        const script = `<script>\n        ${scriptContent.replace(/\n/g, '\n        ')}\n    </script>`;
         return html.replace('<head>', `<head>\n    ${script}`);
     }
 

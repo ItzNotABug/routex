@@ -7,19 +7,28 @@ import type { RedirectOptions, VitePressConfig } from './types.js';
  * Handles template resolution and processing
  */
 export class Template {
+    private cachedTemplate?: string;
+
     constructor(
         private options: RedirectOptions,
         private vitepressConfig?: VitePressConfig,
     ) {}
 
     async resolveTemplate(): Promise<string> {
+        // return cached if available
+        if (this.cachedTemplate !== undefined) {
+            return this.cachedTemplate;
+        }
+
         let template = this.options.template;
 
         if (template) {
             template = await this.loadTemplate(template);
         }
 
-        return template || this.getDefaultTemplate();
+        // cache the resolved template
+        this.cachedTemplate = template || this.getDefaultTemplate();
+        return this.cachedTemplate;
     }
 
     private async loadTemplate(template: string): Promise<string | undefined> {

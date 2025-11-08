@@ -101,26 +101,39 @@ export class RedirectValidator {
         if (this.options.overrideExisting) return;
 
         const srcDir = this.vitepressConfig!.vitepress?.srcDir || process.cwd();
-        const conflicts: string[] = [];
 
-        for (const source of Object.keys(this.rules)) {
+        const fileChecks = Object.keys(this.rules).flatMap((source) => {
             const possibleFiles = [
                 path.join(srcDir, source.slice(1) + '.md'),
                 path.join(srcDir, source.slice(1), 'index.md'),
                 path.join(srcDir, source.slice(1) + '.html'),
             ];
 
-            for (const filePath of possibleFiles) {
-                try {
-                    await fs.access(filePath);
-                    conflicts.push(
-                        `${source} (conflicts with existing file: ${path.relative(process.cwd(), filePath)})`,
-                    );
-                } catch {
-                    // ignore.
-                }
-            }
-        }
+            return possibleFiles.map((filePath) => ({
+                source,
+                filePath,
+                check: fs
+                    .access(filePath)
+                    .then(() => true)
+                    .catch(() => false),
+            }));
+        });
+
+        // execute all file checks in parallel
+        const results = await Promise.all(
+            fileChecks.map(async (item) => ({
+                ...item,
+                exists: await item.check,
+            })),
+        );
+
+        // collect conflicts
+        const conflicts = results
+            .filter((result) => result.exists)
+            .map(
+                (result) =>
+                    `${result.source} (conflicts with existing file: ${path.relative(process.cwd(), result.filePath)})`,
+            );
 
         if (conflicts.length > 0) {
             throw new Error(
@@ -137,35 +150,43 @@ export class RedirectValidator {
         if (this.options.ignoreDeadLinks) return;
 
         const srcDir = this.vitepressConfig!.vitepress?.srcDir || process.cwd();
-        const deadLinks: string[] = [];
+        const internalDestinations = Object.values(this.rules).filter(
+            (dest) => !dest.startsWith('http'),
+        );
 
-        for (const dest of Object.values(this.rules)) {
-            // Skip external URLs
-            if (dest.startsWith('http')) continue;
-
+        // build all file existence checks for parallel execution
+        const destinationChecks = internalDestinations.map((dest) => {
             const cleanDest = dest.slice(1);
             const possibleDestFiles = [
                 path.join(srcDir, cleanDest + '.md'),
                 path.join(srcDir, cleanDest, 'index.md'),
                 path.join(srcDir, cleanDest + '.html'),
                 dest === '/' ? path.join(srcDir, 'index.md') : null,
-            ].filter(Boolean);
+            ].filter(Boolean) as string[];
 
-            let destExists = false;
-            for (const filePath of possibleDestFiles) {
-                try {
-                    await fs.access(filePath!);
-                    destExists = true;
-                    break;
-                } catch (error) {
-                    // File doesn't exist, continue checking
-                }
-            }
+            return {
+                dest,
+                checks: possibleDestFiles.map((filePath) =>
+                    fs
+                        .access(filePath)
+                        .then(() => true)
+                        .catch(() => false),
+                ),
+            };
+        });
 
-            if (!destExists) {
-                deadLinks.push(dest);
-            }
-        }
+        // execute all checks in parallel and determine if any file exists
+        const results = await Promise.all(
+            destinationChecks.map(async (item) => ({
+                dest: item.dest,
+                exists: (await Promise.all(item.checks)).some(Boolean),
+            })),
+        );
+
+        // collect dead links
+        const deadLinks = results
+            .filter((result) => !result.exists)
+            .map((result) => result.dest);
 
         if (deadLinks.length > 0) {
             throw new Error(

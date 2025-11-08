@@ -1,6 +1,6 @@
 {
     "name": "@itznotabug/routex",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "type": "module",
     "description": "A client side redirection plugin for Vitepress.",
     "author": "@itznotabug",
@@ -17,8 +17,8 @@
         }
     },
     "scripts": {
-        "lint": "prettier . --check",
-        "format": "prettier . --write",
+        "lint": "prettier --check .",
+        "format": "prettier --write --cache .",
         "build": "tsc",
         "build:types": "tsc --declaration --emitDeclarationOnly --outDir types",
         "test": "vitest",
