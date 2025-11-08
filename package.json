@@ -17,8 +17,8 @@
         }
     },
     "scripts": {
-        "lint": "prettier . --check",
-        "format": "prettier . --write",
+        "lint": "prettier --check .",
+        "format": "prettier --write --cache .",
         "build": "tsc",
         "build:types": "tsc --declaration --emitDeclarationOnly --outDir types",
         "test": "vitest",
