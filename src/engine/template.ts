@@ -7,7 +7,7 @@ import type { RedirectOptions, VitePressConfig } from './types.js';
  * Handles template resolution and processing
  */
 export class Template {
-    private cachedTemplate?: string = undefined;
+    private cachedTemplate?: string;
 
     constructor(
         private options: RedirectOptions,
