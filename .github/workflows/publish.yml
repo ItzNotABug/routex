@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
-          node-version: '23'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
@@ -34,5 +34,3 @@ jobs:
 
       - name: Publish to npm
         run: pnpm publish --provenance --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
