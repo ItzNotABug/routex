@@ -49,7 +49,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).resolves.not.toThrow();
+            expect(validator.validate()).resolves.not.toThrow();
         });
 
         it('should detect self-referencing redirects', async () => {
@@ -64,7 +64,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).rejects.toThrow(
+            expect(validator.validate()).rejects.toThrow(
                 'Self-referencing redirects detected: /page',
             );
         });
@@ -81,7 +81,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).rejects.toThrow(
+            expect(validator.validate()).rejects.toThrow(
                 'Circular redirect detected involving: /a',
             );
         });
@@ -99,7 +99,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).rejects.toThrow(
+            expect(validator.validate()).rejects.toThrow(
                 'Source "invalid-source" must start with "/"',
             );
         });
@@ -115,7 +115,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).rejects.toThrow(
+            expect(validator.validate()).rejects.toThrow(
                 'must start with "/" or be a full URL',
             );
         });
@@ -132,7 +132,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).resolves.not.toThrow();
+            expect(validator.validate()).resolves.not.toThrow();
         });
     });
 
@@ -152,7 +152,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).rejects.toThrow(
+            expect(validator.validate()).rejects.toThrow(
                 'Redirect sources conflict with existing pages',
             );
         });
@@ -174,7 +174,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).resolves.not.toThrow();
+            expect(validator.validate()).resolves.not.toThrow();
         });
     });
 
@@ -190,7 +190,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).rejects.toThrow(
+            expect(validator.validate()).rejects.toThrow(
                 'Dead destination links detected',
             );
         });
@@ -206,7 +206,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).resolves.not.toThrow();
+            expect(validator.validate()).resolves.not.toThrow();
         });
 
         it('should skip dead link validation when ignoreDeadLinks is true', async () => {
@@ -221,7 +221,96 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).resolves.not.toThrow();
+            expect(validator.validate()).resolves.not.toThrow();
+        });
+
+        it('should accept redirects with hash fragments', async () => {
+            setupFileSystem({
+                '/test/src/page.md': '# Page Content',
+            });
+
+            const rules: RedirectMap = {
+                '/old': '/page#section',
+                '/another': '/page#another-section',
+            };
+
+            const validator = new RedirectValidator(
+                rules,
+                defaultOptions,
+                mockVitePressConfig,
+            );
+
+            expect(validator.validate()).resolves.not.toThrow();
+        });
+
+        it('should accept redirects with query parameters', async () => {
+            setupFileSystem({
+                '/test/src/search.md': '# Search Page',
+            });
+
+            const rules: RedirectMap = {
+                '/old-search': '/search?query=test',
+                '/filter': '/search?category=docs&sort=date',
+            };
+
+            const validator = new RedirectValidator(
+                rules,
+                defaultOptions,
+                mockVitePressConfig,
+            );
+
+            expect(validator.validate()).resolves.not.toThrow();
+        });
+
+        it('should accept redirects with both hash and query parameters', async () => {
+            setupFileSystem({
+                '/test/src/docs/api.md': '# API Documentation',
+            });
+
+            const rules: RedirectMap = {
+                '/api-old': '/docs/api?version=2#authentication',
+                '/auth': '/docs/api#auth?section=oauth',
+            };
+
+            const validator = new RedirectValidator(
+                rules,
+                defaultOptions,
+                mockVitePressConfig,
+            );
+
+            expect(validator.validate()).resolves.not.toThrow();
+        });
+
+        it('should still detect dead links even with hash fragments', async () => {
+            const rules: RedirectMap = {
+                '/old': '/non-existent#section',
+            };
+
+            const validator = new RedirectValidator(
+                rules,
+                defaultOptions,
+                mockVitePressConfig,
+            );
+
+            expect(validator.validate()).rejects.toThrow(
+                'Dead destination links detected',
+            );
+        });
+
+        it('should still detect dead links even with query parameters', async () => {
+            const rules: RedirectMap = {
+                '/search': '/non-existent?query=test',
+            };
+
+            const validator = new RedirectValidator(
+                rules,
+                defaultOptions,
+                mockVitePressConfig,
+            );
+
+            expect(validator.validate()).rejects.toThrow(
+                'Dead destination links detected',
+            );
         });
     });
 
@@ -233,7 +322,7 @@ describe('RedirectValidator', () => {
                 mockVitePressConfig,
             );
 
-            await expect(validator.validate()).resolves.not.toThrow();
+            expect(validator.validate()).resolves.not.toThrow();
         });
 
         it('should work without VitePress config', async () => {
@@ -247,7 +336,7 @@ describe('RedirectValidator', () => {
                 undefined,
             );
 
-            await expect(validator.validate()).resolves.not.toThrow();
+            expect(validator.validate()).resolves.not.toThrow();
         });
     });
 });

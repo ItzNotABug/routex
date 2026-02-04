@@ -21,8 +21,7 @@
         "format": "prettier --write --cache .",
         "build": "tsc",
         "build:types": "tsc --declaration --emitDeclarationOnly --outDir types",
-        "test": "vitest",
-        "test:run": "vitest run"
+        "test": "vitest run"
     },
     "prettier": {
         "tabWidth": 4,
