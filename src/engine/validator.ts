@@ -156,12 +156,14 @@ export class RedirectValidator {
 
         // build all file existence checks for parallel execution
         const destinationChecks = internalDestinations.map((dest) => {
-            const cleanDest = dest.slice(1);
+            // remove hash and query params
+            const basePathOnly = this.normalizeUrlPath(dest);
+            const cleanDest = basePathOnly.slice(1);
             const possibleDestFiles = [
                 path.join(srcDir, cleanDest + '.md'),
                 path.join(srcDir, cleanDest, 'index.md'),
                 path.join(srcDir, cleanDest + '.html'),
-                dest === '/' ? path.join(srcDir, 'index.md') : null,
+                basePathOnly === '/' ? path.join(srcDir, 'index.md') : null,
             ].filter(Boolean) as string[];
 
             return {
@@ -197,5 +199,10 @@ export class RedirectValidator {
                     )}\n\nTo ignore dead links, set 'ignoreDeadLinks: true' in options.`,
             );
         }
+    }
+
+    private normalizeUrlPath(url: string): string {
+        const withoutHash = url.split('#')[0] || url;
+        return withoutHash.split('?')[0] || withoutHash;
     }
 }
